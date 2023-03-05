@@ -17,8 +17,8 @@ export class Post {
   title: string;
   @Column("text")
   content: string;
-  //   @Column("int")
-  //   authorId: string;
+  @Column("int")
+  authorId: string;
   @CreateDateColumn({ type: "timestamp" })
   createdAt: Date;
   @UpdateDateColumn({ type: "timestamp" })

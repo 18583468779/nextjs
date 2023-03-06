@@ -1,62 +1,101 @@
 import { NextPage } from "next";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
-const sign_up: NextPage = () => {
+const SignUp: NextPage = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
-    passwordConfirm: "",
+    passwordConfirmation: "",
   });
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
-  const register = () => {};
+  const [errors, setErrors] = useState({
+    username: [],
+    password: [],
+    passwordConfirmation: [],
+  });
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      axios.post(`/api/v1/users`, formData).then(
+        () => {},
+        (error) => {
+          if (error.response) {
+            const response: AxiosResponse = error.response;
+            if (response.status === 422) {
+              console.log("response.data");
+              console.log(response.data);
+              setErrors({ ...errors, ...response.data });
+            }
+          }
+        }
+      );
+    },
+    [formData]
+  );
   return (
-    <div>
-      <h1>注册页面</h1>
-      <div>
-        <form onSubmit={register}>
-          <div>
-            <label>用户名：</label>
+    <>
+      <h1>注册</h1>
+      <form onSubmit={onSubmit}>
+        <div>
+          <label>
+            用户名
             <input
               type="text"
-              placeholder="请输入用户名"
               value={formData.username}
               onChange={(e) =>
-                setFormData({ ...formData, username: e.target.value })
+                setFormData({
+                  ...formData,
+                  username: e.target.value,
+                })
               }
             />
-          </div>
-          <div>
-            <label>密码：</label>
+          </label>
+          {errors.username?.length > 0 && (
+            <div>{errors.username.join(",")}</div>
+          )}
+        </div>
+        <div>
+          <label>
+            密码
             <input
               type="password"
-              placeholder="请输入密码"
               value={formData.password}
               onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
+                setFormData({
+                  ...formData,
+                  password: e.target.value,
+                })
               }
             />
-          </div>
-          <div>
-            <label>确认密码：</label>
+          </label>
+          {errors.password?.length > 0 && (
+            <div>{errors.password.join(",")}</div>
+          )}
+        </div>
+        <div>
+          <label>
+            重置密码
             <input
               type="password"
-              placeholder="请确认密码"
-              value={formData.passwordConfirm}
+              value={formData.passwordConfirmation}
               onChange={(e) =>
-                setFormData({ ...formData, passwordConfirm: e.target.value })
+                setFormData({
+                  ...formData,
+                  passwordConfirmation: e.target.value,
+                })
               }
             />
-          </div>
-          <div>
-            <button type="submit">注册</button>
-          </div>
-        </form>
-      </div>
-    </div>
+          </label>
+          {errors.passwordConfirmation?.length > 0 && (
+            <div>{errors.passwordConfirmation.join(",")}</div>
+          )}
+        </div>
+        <div>
+          <button type="submit">注册</button>
+        </div>
+      </form>
+    </>
   );
 };
 
-export default sign_up;
+export default SignUp;

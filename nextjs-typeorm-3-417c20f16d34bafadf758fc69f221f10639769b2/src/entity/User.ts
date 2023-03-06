@@ -4,12 +4,14 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
 @Entity("users")
+@Index(["username"], { unique: true })
 export class User {
   @PrimaryGeneratedColumn("increment")
   id: number;

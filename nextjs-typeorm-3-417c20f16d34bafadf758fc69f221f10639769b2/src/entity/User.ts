@@ -1,6 +1,8 @@
 import { Post } from "./Post";
 import { Comment } from "./Comment";
+import md5 from "md5";
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -59,7 +61,10 @@ export class User {
     }
   }
   hasErrors(){
-    console.log('this.errors',this.errors);
     return !!Object.values(this.errors).find(v => v.length >0)
+  }
+  @BeforeInsert()
+  generatePasswordDigest() {
+    this.passwordDigest = md5(this.password);
   }
 }

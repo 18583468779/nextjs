@@ -15,9 +15,10 @@ var _applyDecoratedDescriptor2 = _interopRequireDefault(require("@babel/runtime/
 var _initializerWarningHelper2 = _interopRequireDefault(require("@babel/runtime/helpers/initializerWarningHelper"));
 var _Post = require("./Post");
 var _Comment = require("./Comment");
+var _md = _interopRequireDefault(require("md5"));
 var _typeorm = require("typeorm");
 var _getDatabaseConnection = require("lib/getDatabaseConnection");
-var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
+var _dec, _dec2, _dec3, _dec4, _dec5, _dec6, _dec7, _dec8, _dec9, _dec10, _class, _class2, _descriptor, _descriptor2, _descriptor3, _descriptor4, _descriptor5, _descriptor6, _descriptor7;
 var User = (_dec = (0, _typeorm.Entity)("users"), _dec2 = (0, _typeorm.Index)(["username"], {
   unique: true
 }), _dec3 = (0, _typeorm.PrimaryGeneratedColumn)("increment"), _dec4 = (0, _typeorm.Column)("varchar"), _dec5 = (0, _typeorm.Column)("varchar"), _dec6 = (0, _typeorm.CreateDateColumn)({
@@ -32,7 +33,7 @@ var User = (_dec = (0, _typeorm.Entity)("users"), _dec2 = (0, _typeorm.Index)(["
   return _Comment.Comment;
 }, function (comment) {
   return comment.user;
-}), _dec(_class = _dec2(_class = (_class2 = /*#__PURE__*/function () {
+}), _dec10 = (0, _typeorm.BeforeInsert)(), _dec(_class = _dec2(_class = (_class2 = /*#__PURE__*/function () {
   function User() {
     (0, _classCallCheck2["default"])(this, User);
     (0, _initializerDefineProperty2["default"])(this, "id", _descriptor, this);
@@ -103,10 +104,14 @@ var User = (_dec = (0, _typeorm.Entity)("users"), _dec2 = (0, _typeorm.Index)(["
   }, {
     key: "hasErrors",
     value: function hasErrors() {
-      console.log('this.errors', this.errors);
       return !!Object.values(this.errors).find(function (v) {
         return v.length > 0;
       });
+    }
+  }, {
+    key: "generatePasswordDigest",
+    value: function generatePasswordDigest() {
+      this.passwordDigest = (0, _md["default"])(this.password);
     }
   }]);
   return User;
@@ -145,5 +150,5 @@ var User = (_dec = (0, _typeorm.Entity)("users"), _dec2 = (0, _typeorm.Index)(["
   enumerable: true,
   writable: true,
   initializer: null
-})), _class2)) || _class) || _class);
+}), (0, _applyDecoratedDescriptor2["default"])(_class2.prototype, "generatePasswordDigest", [_dec10], Object.getOwnPropertyDescriptor(_class2.prototype, "generatePasswordDigest"), _class2.prototype)), _class2)) || _class) || _class);
 exports.User = User;

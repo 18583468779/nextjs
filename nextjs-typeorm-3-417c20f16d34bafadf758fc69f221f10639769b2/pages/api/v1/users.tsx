@@ -1,5 +1,5 @@
 import { getDatabaseConnection } from "lib/getDatabaseConnection";
-import md5 from "md5";
+
 import { NextApiHandler } from "next";
 import { User } from "src/entity/User";
 
@@ -11,7 +11,6 @@ const Users: NextApiHandler = async (req, res) => {
   const user = new User();
   user.username = username.trim();
   user.password = password;
-  user.passwordDigest =md5(password);
   user.passwordConfirmation = passwordConfirmation;
   await user.validate();
   if (user.hasErrors()) {

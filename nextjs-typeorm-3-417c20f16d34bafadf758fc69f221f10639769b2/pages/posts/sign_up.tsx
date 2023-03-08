@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useCallback, useState } from "react";
 import axios, { AxiosError, AxiosResponse } from "axios";
-
+import Router from "next/router"
 const SignUp: NextPage = () => {
   const [formData, setFormData] = useState({
     username: "",
@@ -13,11 +13,18 @@ const SignUp: NextPage = () => {
     password: [],
     passwordConfirmation: [],
   });
+
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
       axios.post(`/api/v1/users`, formData).then(
-        () => {},
+        (res) => {
+          console.log(res);
+          if(res.status = 200){
+            window.alert('注册成功')
+            Router.push('/posts/sign_in')
+          }
+        },
         (error) => {
           if (error.response) {
             const response: AxiosResponse = error.response;
